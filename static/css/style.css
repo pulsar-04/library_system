@@ -1,0 +1,16 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+}
+
+header {
+    background-color: #f8f9fa;
+}
+
+section img {
+    max-height: 400px;
+    object-fit: cover;
+}
+
+footer {
+    font-size: 14px;
+}
