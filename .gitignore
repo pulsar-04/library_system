@@ -12,16 +12,12 @@ __pycache__/
 db.sqlite3
 
 # Virtual environment
-.env/
+.env
 venv/
 ENV/
-*.env
 .vscode/
 .idea/
 
 # OS
 .DS_Store
 Thumbs.db
-
-# Secrets
-library_system/settings.py
