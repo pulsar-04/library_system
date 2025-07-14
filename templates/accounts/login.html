@@ -1,20 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Register{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">Create an Account</h2>
+    <h2 class="mb-4 text-center">Login</h2>
 
     <form method="post" class="w-50 mx-auto bg-white p-4 rounded shadow">
         {% csrf_token %}
         {{ form.as_p }}
 
-        <button type="submit" class="btn btn-primary w-100">Register</button>
+        <button type="submit" class="btn btn-success w-100">Login</button>
     </form>
 
     <p class="text-center mt-3">
-        Already have an account? <a href="{% url 'login' %}">Login here</a>
+        Don't have an account? <a href="{% url 'register' %}">Register here</a>
     </p>
 </div>
 {% endblock %}
