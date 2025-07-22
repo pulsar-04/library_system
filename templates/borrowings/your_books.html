@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Your Borrowed Books</h2>
+    {% if borrowed_books %}
+        <div class="row">
+            {% for borrow in borrowed_books %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <img src="{{ borrow.book.image.url }}" class="card-img-top" alt="{{ borrow.book.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ borrow.book.title }}</h5>
+                            <p><strong>Borrowed at:</strong> {{ borrow.borrowed_at }}</p>
+                            <form action="{% url 'borrowings:return_book' borrow.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Return the book</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no borrowed books.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -18,17 +18,24 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         if self.request.user.is_librarian:
-            return reverse('librarian_dashboard')
+            return reverse('books:librarian_dashboard')
         return reverse('home')
 
 
 class UserLogoutView(LogoutView):
     next_page = 'home'
 
+
 class HomePageView(TemplateView):
     template_name = 'home.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user.is_librarian:
-            return redirect('librarian_dashboard')
-        return super().dispatch(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            if hasattr(request.user, 'profile') and request.user.profile.is_librarian:
+                return redirect('books:librarian_dashboard')
+        return super().get(request, *args, **kwargs)
+
+
+
+
+

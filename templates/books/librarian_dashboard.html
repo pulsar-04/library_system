@@ -4,5 +4,12 @@
 <div class="container mt-5">
     <h2>📚 Librarian Dashboard</h2>
     <p class="text-muted">Only visible to librarian users.</p>
+    <div class="mt-4">
+        <a href="{% url 'books:create_book' %}" class="btn btn-success">➕ Add New Book</a>
+
+        <a href="{% url 'books:book_list' %}" class="btn btn-outline-primary">
+            📖 View All Books
+        </a>
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">All Books</h2>
+
+    {% if user.is_authenticated and user.is_librarian %}
+        <div class="text-center mb-4">
+            <a href="{% url 'books:librarian_dashboard' %}" class="btn btn-outline-primary">
+                ⬅ Back to Dashboard
+            </a>
+        </div>
+    {% endif %}
+
+    {% if books %}
+        <div class="row">
+            {% for book in books %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+
+                        {% if book.image %}
+                            <img src="{{ book.image.url }}" class="card-img-top img-fluid rounded shadow" style="height: 450px; object-fit: cover;" alt="{{ book.title }}">
+                        {% else %}
+                            <img src="{% static 'images/just_cover.jpg' %}" class="card-img-top img-fluid" alt="No image">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text"><strong>Author:</strong> {{ book.author }}</p>
+                            <p><strong>Genre:</strong>
+                                {% for genre in book.genre.all %}
+                                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    No genres
+                                {% endfor %}
+                            </p>
+                            <p class="card-text"><strong>Available:</strong> {{ book.is_available|yesno:"Yes,No" }}</p>
+
+                            {% if book.is_available and not user.is_librarian %}
+                                <a href="{% url 'borrowings:borrow_book' book.id %}" class="btn btn-sm btn-success">Borrow</a>
+                            {% endif %}
+                            {% if user.is_authenticated and user.is_librarian %}
+                                <a href="{% url 'books:edit_book' book.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'books:delete_book' book.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center">No books available.</p>
+    {% endif %}
+</div>
+{% endblock %}

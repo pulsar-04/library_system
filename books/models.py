@@ -20,5 +20,7 @@ class Book(models.Model):
     description = models.TextField(blank=True)
     is_available = models.BooleanField(default=True)
 
+    image = models.ImageField(upload_to='book_covers/', null=True, blank=True)
+
     def __str__(self):
         return self.title
