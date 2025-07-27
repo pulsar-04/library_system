@@ -4,10 +4,13 @@ from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.timezone import now
+from django.contrib.auth.decorators import user_passes_test
 
 
 from books.models import Book
 from borrowings.models import Borrow
+
+from django.utils import timezone
 
 
 @login_required
@@ -44,3 +47,33 @@ def return_book(request, borrow_id):
     borrow.book.save()
     borrow.save()
     return redirect('borrowings:your_books')
+
+
+
+@user_passes_test(lambda u: u.is_librarian)
+def force_return(request, book_id):
+    borrow = get_object_or_404(Borrow, book_id=book_id, returned_at__isnull=True)
+    borrow.returned_at = timezone.now()
+    borrow.save()
+
+    book = borrow.book
+    book.is_available = True
+    book.save()
+
+    return redirect('books:librarian_dashboard')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

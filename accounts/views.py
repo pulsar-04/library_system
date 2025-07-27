@@ -1,6 +1,4 @@
-# Create your views here.
-from django.shortcuts import render
-from django.http import HttpResponse
+
 from django.views import generic
 from .forms import AppUserRegisterForm
 from django.urls import reverse_lazy, reverse

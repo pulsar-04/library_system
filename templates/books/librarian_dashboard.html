@@ -10,6 +10,36 @@
         <a href="{% url 'books:book_list' %}" class="btn btn-outline-primary">
             📖 View All Books
         </a>
+        {% if borrowed_books %}
+        <h3 class="mt-5 mb-3">Currently Borrowed Books</h3>
+        <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Borrowed by</th>
+                <th>Borrowed at</th>
+                <th>Return</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for borrow in borrowed_books %}
+            <tr>
+                <td>{{ borrow.book.title }}</td>
+                <td>{{ borrow.user.username }}</td>
+                <td>{{ borrow.borrowed_at|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <form method="post" action="{% url 'borrowings:force_return' borrow.book.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-warning btn-sm">Force Return</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+        {% else %}
+            <p>No books are currently borrowed.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
