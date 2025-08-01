@@ -24,6 +24,9 @@
                         <a href="{% url 'borrowings:your_books' %}" class="btn btn-outline-info ms-2">Your Books</a>
                     {% endif %}
                 </form>
+                <a href="{% url 'edit_profile' %}" class="btn btn-outline-info ms-2 rounded-pill fw-semibold shadow-sm">
+    ✏️ Edit Profile
+</a>
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
                 <a href="{% url 'register' %}" class="btn btn-outline-warning">Register</a>

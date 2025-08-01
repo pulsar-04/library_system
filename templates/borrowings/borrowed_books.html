@@ -19,11 +19,7 @@
                             <h5 class="card-title">{{ borrow.book.title }}</h5>
                             <p class="card-text"><strong>Author:</strong> {{ borrow.book.author }}</p>
                             <p class="card-text"><strong>Borrowed at:</strong> {{ borrow.borrowed_at|date:"d M Y, H:i" }}</p>
-
-                            <form method="post" action="{% url 'borrowings:return_book' borrow.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Return the book</button>
-                            </form>
+                            <a href="{% url 'borrowings:return_book' borrow.id %}" class="btn btn-danger">Return</a>
                         </div>
                     </div>
                 </div>

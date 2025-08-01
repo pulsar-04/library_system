@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 from books.models import Book
 from borrowings.models import Borrow
-
+from borrowings.forms import ReturnBookForm
 from django.utils import timezone
 
 
@@ -42,11 +42,23 @@ def your_borrowed_books(request):
 @login_required
 def return_book(request, borrow_id):
     borrow = get_object_or_404(Borrow, id=borrow_id, user=request.user, returned_at__isnull=True)
-    borrow.returned_at = now()
-    borrow.book.is_available = True
-    borrow.book.save()
-    borrow.save()
-    return redirect('borrowings:your_books')
+
+    if request.method == 'POST':
+        form = ReturnBookForm(request.POST)
+        if form.is_valid():
+            borrow.returned_at = now()
+            borrow.book.is_available = True
+            borrow.book.save()
+            borrow.save()
+            messages.success(request, "Book returned successfully.")
+            return redirect('borrowings:your_books')
+    else:
+        form = ReturnBookForm()
+
+    return render(request, 'borrowings/return_book.html', {
+        'form': form,
+        'borrow': borrow,
+    })
 
 
 

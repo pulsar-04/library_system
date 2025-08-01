@@ -3,8 +3,10 @@ from django.views import generic
 from .forms import AppUserRegisterForm
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import TemplateView
+from .forms import EditProfileForm
+from django.contrib.auth.decorators import login_required
 
 class RegisterView(generic.CreateView):
     form_class = AppUserRegisterForm
@@ -35,5 +37,15 @@ class HomePageView(TemplateView):
 
 
 
+@login_required
+def edit_profile_view(request):
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("books:book_list")  # Ще го създадем
+    else:
+        form = EditProfileForm(instance=request.user)
+    return render(request, "accounts/edit_profile.html", {"form": form})
 
 
