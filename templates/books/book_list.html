@@ -4,6 +4,18 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center mb-4">All Books</h2>
+    <form method="get" action="{% url 'books:book_list' %}" class="mb-4 text-center d-flex justify-content-center gap-2">
+        <input type="text" name="q" placeholder="Search by title..." class="form-control w-50" value="{{ request.GET.q }}">
+
+        <select name="availability" class="form-select w-auto">
+            <option value="">All</option>
+            <option value="available" {% if request.GET.availability == "available" %}selected{% endif %}>Available</option>
+            <option value="unavailable" {% if request.GET.availability == "unavailable" %}selected{% endif %}>Not Available</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
 
     {% if user.is_authenticated and user.is_librarian %}
         <div class="text-center mb-4">
@@ -15,7 +27,7 @@
 
     {% if books %}
         <div class="row">
-            {% for book in books %}
+            {% for book in page_obj %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100 shadow-sm">
 
@@ -50,7 +62,40 @@
             {% endfor %}
         </div>
     {% else %}
-        <p class="text-center">No books available.</p>
+        <p class="text-center">
+            {% if request.GET.q %}
+                No books found matching "{{ request.GET.q }}"
+            {% else %}
+                No books available.
+            {% endif %}
+        </p>
     {% endif %}
+</div>
+<div class="pagination justify-content-center mt-4">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item disabled">
+            <span class="page-link">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
 </div>
 {% endblock %}

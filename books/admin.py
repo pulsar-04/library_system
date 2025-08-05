@@ -15,9 +15,13 @@ class BookAdmin(admin.ModelAdmin):
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
 
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ('name',)
+    search_fields = ('name',)
+    ordering = ('name',)
 

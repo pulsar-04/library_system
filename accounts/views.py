@@ -1,4 +1,4 @@
-
+from django.contrib.auth import logout
 from django.views import generic
 from .forms import AppUserRegisterForm
 from django.urls import reverse_lazy, reverse
@@ -25,13 +25,17 @@ class CustomLoginView(LoginView):
 class UserLogoutView(LogoutView):
     next_page = 'home'
 
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect(self.next_page)
 
 class HomePageView(TemplateView):
     template_name = 'home.html'
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            if hasattr(request.user, 'profile') and request.user.profile.is_librarian:
+            if request.user.is_librarian:
+             #if hasattr(request.user, 'profile') and request.user.profile.is_librarian:
                 return redirect('books:librarian_dashboard')
         return super().get(request, *args, **kwargs)
 

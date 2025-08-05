@@ -23,17 +23,33 @@ class LibrarianDashboardView(LibrarianRequiredMixin, TemplateView):
         context['borrowed_books'] = Borrow.objects.filter(returned_at__isnull=True)
         return context
 
-
-
-
-
 class BookListView(ListView):
     model = Book
     template_name = 'books/book_list.html'
     context_object_name = 'books'
+    paginate_by = 6
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get('q')
+        availability = self.request.GET.get('availability')
 
+        if query:
+            queryset = queryset.filter(title__icontains=query)
 
+        if availability == 'available':
+            queryset = queryset.filter(is_available=True)
+        elif availability == 'unavailable':
+            queryset = queryset.filter(is_available=False)
+
+        return queryset
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     query = self.request.GET.get('q')
+    #     if query:
+    #         queryset = queryset.filter(title__icontains=query)
+    #     return queryset
 
 @login_required
 @user_passes_test(is_librarian)
